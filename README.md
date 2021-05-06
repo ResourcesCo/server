@@ -31,3 +31,23 @@ sudo DOKKU_TAG=v0.24.7 bash bootstrap.sh
 Go to `http://<ip-address>/` and complete the setup with the defaults.
 
 [dokku-setup]: https://github.com/dokku/dokku/blob/master/docs/getting-started/installation.md#installing-the-latest-stable-version
+
+## set up a gitea app and postgres database
+
+Create an empty (for now) gitea app:
+
+```bash
+dokku apps:create gitea
+```
+
+Install the dokku postgres plugin:
+
+```bash
+dokku plugin:install https://github.com/dokku/dokku-postgres.git
+```
+
+Create a postgres database service:
+
+```bash
+dokku postgres:create my-pg
+```
