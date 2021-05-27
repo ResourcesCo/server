@@ -94,5 +94,61 @@ export PATH="/home/myusername/.local/bin:$PATH"
 
 [Set up neovim](https://github.com/junegunn/vim-plug)
 
+## Set up Caddy
+
+### Install Caddy with apt
+
+### Build custom Caddy with xcaddy
+
+Build a custom Caddy with the desired DNS plugin using xcaddy.
+
+Then move it to replace the caddy from the package.
+
+```bash
+sudo mv ./caddy /usr/bin/caddy
+```
+
+Add this configuration, replacing `yoursite.com` with your domain name:
+
+```caddy
+gitea.yoursite.com {
+  reverse_proxy localhost:3600
+}
+
+*.yoursite.com {
+  reverse_proxy localhost:3000
+  tls {
+    dns digitalocean {env.DIGITALOCEAN_API_TOKEN}
+  }
+}
+```
+
+The DNS provider API token needs to be stored so only root and caddy can access it.
+This is especially important because many DNS providers do not have fine-grained
+permissions for API keys.
+
+Add a file for the environment variable, and make sure it's unreadable:
+
+```bash
+sudo touch /etc/systemd/system/caddy.service.d/override.conf
+sudo chmod 600 /etc/systemd/system/caddy.service.d/override.conf
+```
+
+Add the environment variable to the file:
+
+```
+[Service]
+Environment="DIGITALOCEAN_API_TOKEN=REPLACE_ME_WITH_YOUR_API_TOKEN"
+```
+
+Then reload the systemctl configuration and restart caddy:
+
+```
+sudo systemctl daemon-reload
+sudo service caddy restart
+```
+
+## Set up gitea
+
 [sudo-user]: https://www.digitalocean.com/community/tutorials/how-to-create-a-new-sudo-enabled-user-on-ubuntu-18-04-quickstart
 [pyenv-install]: https://github.com/pyenv/pyenv#basic-github-checkout
