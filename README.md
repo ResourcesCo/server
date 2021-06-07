@@ -111,6 +111,10 @@ sudo mv ./caddy /usr/bin/caddy
 Add this configuration, replacing `yoursite.com` with your domain name:
 
 ```caddy
+{
+  admin off
+}
+
 gitea.yoursite.com {
   reverse_proxy localhost:3600
 }
@@ -147,6 +151,10 @@ Then reload the systemctl configuration and restart caddy:
 sudo systemctl daemon-reload
 sudo service caddy restart
 ```
+
+The `admin off` in the global configuration disables the Caddy admin server at
+`localhost:2019`. This is also needed to keep the `DIGITALOCEAN_API_TOKEN` from
+being accessed by a regular user that doesn't have root access.
 
 ## Set up gitea
 
