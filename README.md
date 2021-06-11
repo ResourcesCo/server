@@ -158,5 +158,14 @@ being accessed by a regular user that doesn't have root access.
 
 ## Set up gitea
 
+## Set up ufw
+
+```
+sudo ufw enable
+sudo ufw allow 22
+sudo ufw allow 80
+sudo ufw allow 443
+```
+
 [sudo-user]: https://www.digitalocean.com/community/tutorials/how-to-create-a-new-sudo-enabled-user-on-ubuntu-18-04-quickstart
 [pyenv-install]: https://github.com/pyenv/pyenv#basic-github-checkout
