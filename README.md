@@ -167,5 +167,53 @@ sudo ufw allow 80
 sudo ufw allow 443
 ```
 
+## Run Vite inside Docker
+
+```
+npm init @vitejs/app sandy -- --template vue-ts
+```
+
+Add `server.hmr` to `vite.config.ts`:
+
+```
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    hmr: {
+      host: "sandy.benatkin.com",
+      port: 443,
+      protocol: 'wss',
+    },
+  },
+})
+```
+
+Go into Docker:
+
+```
+sudo docker run -p 127.0.0.1:4001:4001 --mount type=bind,source=$(dirname $(pwd))/sandy,target=/app -it node4001 /bin/bash
+```
+
+...and run:
+
+```
+npm install
+npm run dev
+```
+
+Add this to Caddyfile:
+
+```
+sandy.benatkin.com {
+  reverse_proxy localhost:4001
+}
+```
+
+This could be automated with Caddy fmt and a block, or by using Caddy's JSON format.
+
 [sudo-user]: https://www.digitalocean.com/community/tutorials/how-to-create-a-new-sudo-enabled-user-on-ubuntu-18-04-quickstart
 [pyenv-install]: https://github.com/pyenv/pyenv#basic-github-checkout
